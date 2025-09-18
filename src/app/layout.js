@@ -4,6 +4,12 @@ import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
 
+export const metadata = {
+  title: "Wake-On-LAN UI",
+  description: "Next.js dashboard designed to wake computers",
+};
+
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>

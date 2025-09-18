@@ -50,7 +50,10 @@ export default function Home() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Mini WOL Dashboard</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Mini WOL Dashboard</h1>
+          <h6 className="text-xs">by stoaz & ChatGPT</h6>
+        </div>
         <Button onClick={addHost}>Add host</Button>
       </div>
 

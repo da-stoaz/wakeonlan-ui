@@ -9,14 +9,15 @@ return Response.json({ hosts: rows })
 
 
 export async function POST(req) {
-const { name, mac, ip, ssh } = await req.json()
+const { name, mac, ip, mask, ssh } = await req.json()
 if (!name) return Response.json({ error: "name required" }, { status: 400 })
 
 
 const id = randomUUID()
-db.prepare("INSERT INTO hosts (id, name, mac, ip, ssh) VALUES (?, ?, ?, ?, ?)").run(
+db.prepare("INSERT INTO hosts (id, name, mask, mac, ip, ssh) VALUES (?, ?, ?, ?, ?, ?)").run(
 id,
 name,
+mask || null,
 mac || null,
 ip || null,
 ssh || null

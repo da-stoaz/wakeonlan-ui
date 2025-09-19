@@ -2,8 +2,12 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import { Button } from "./ui/button"
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { Check, LucideTrash, Trash, Trash2, Trash2Icon, TrashIcon } from "lucide-react"
+import { Check, LucideTrash, PencilIcon, Trash, Trash2, Trash2Icon, TrashIcon } from "lucide-react"
+import { EllipsisVertical } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
+import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover"
+import { Separator } from "@/components/ui/separator"
+
 
 export default function HostCard({ host, deleteHost, wake, check }) {
     const [status, setStatus] = useState({ alive: false, time: 0 })
@@ -50,19 +54,41 @@ export default function HostCard({ host, deleteHost, wake, check }) {
                             ></span>
                             {host.name}
                         </div>
-                        <Button
-                            onClick={() => deleteHost(host.id)}
-                            variant="destructive"
-                            size="sm"
-                        >
-                            <Trash2Icon />
-                            Delete
-                        </Button>
+                        <Popover>
+                            <PopoverTrigger>
+                                <EllipsisVertical />
+
+                            </PopoverTrigger>
+                            <PopoverContent className="space-y-2">
+                                <h4 className="font-semibold">Actions</h4>
+                                <Separator orientation="horizontal" />
+                                <div className="flex flex-row gap-2">
+                                    <Button
+                                        onClick={() => console.log("edit?")}
+                                        variant=""
+                                        size="sm">
+                                        <PencilIcon />
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        onClick={() => deleteHost(host.id)}
+                                        variant="destructive"
+                                        size="sm"
+                                    >
+                                        <Trash2Icon />
+                                        Delete
+                                    </Button>
+                                </div>
+
+                            </PopoverContent>
+                        </Popover>
+
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
                 <div>IP: {host.ip}</div>
+                <div>Subnet Mask: {host.mask}</div>
                 <div>MAC: {host.mac ?? "N/A"}</div>
                 <div className="flex gap-2 pt-2">
                     {!host.mac ? (

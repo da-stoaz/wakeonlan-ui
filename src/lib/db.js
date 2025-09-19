@@ -16,6 +16,7 @@ db.prepare(`CREATE TABLE IF NOT EXISTS hosts (
 id TEXT PRIMARY KEY,
 name TEXT,
 mac TEXT,
+mask TEXT,
 ip TEXT,
 ssh TEXT
 )`).run()

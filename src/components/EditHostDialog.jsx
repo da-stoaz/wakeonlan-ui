@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,67 +9,70 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import { toast } from "sonner";
 
-
-export default function AddHostDialog({ onHostAdded }) {
+export function EditHostDialog({ host, onHostUpdated, children }) {
     const [name, setName] = useState("");
     const [ip, setIp] = useState("");
     const [mask, setMask] = useState("");
     const [mac, setMac] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
+    useEffect(() => {
+        if (host) {
+            setName(host.name || "");
+            setIp(host.ip || "");
+            setMask(host.mask || "");
+            setMac(host.mac || "");
+        }
+    }, [host]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name.trim()) {
-            toast("Host name is required.", {variant: "destructive"});
-            return;
-        }
-
         try {
             await fetch("/api/hosts", {
-                method: "POST",
+                method: "PATCH",
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({ name, ip, mask, mac }),
+                body: JSON.stringify({
+                    id: host.id,
+                    name,
+                    ip,
+                    mask,
+                    mac,
+                }),
             });
 
-            // Clear form inputs
-            setName("");
-            setIp("");
-            setMask("");
-            setMac("");
             setIsOpen(false);
 
             // Notify parent component to refresh the list
-            if (onHostAdded) {
-                onHostAdded();
+            if (onHostUpdated) {
+                onHostUpdated();
             }
         } catch (error) {
-            console.error("Failed to add host:", error);
-            toast.error("Failed to add host. Please try again.");
+            console.error("Failed to update host:", error);
+            alert("Failed to update host. Please try again.");
         }
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant=""><PlusIcon /> Add Host</Button>
+                {/* This allows a custom button or element to trigger the dialog */}
+                {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add New Host</DialogTitle>
+                    <DialogTitle>Edit Host</DialogTitle>
                     <DialogDescription>
-                        Enter the details for the new host. Click save when you're done.
+                        Update the details for this host.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
+                        <Label htmlFor="name" className="">
                             Name
                         </Label>
                         <Input
@@ -81,7 +84,7 @@ export default function AddHostDialog({ onHostAdded }) {
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="ip" className="text-right">
+                        <Label htmlFor="ip" className="">
                             IP
                         </Label>
                         <Input
@@ -93,7 +96,7 @@ export default function AddHostDialog({ onHostAdded }) {
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="mask" className="text-right">
+                        <Label htmlFor="mask" className="">
                             Subnet Mask
                         </Label>
                         <Input
@@ -105,7 +108,7 @@ export default function AddHostDialog({ onHostAdded }) {
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="mac" className="text-right">
+                        <Label htmlFor="mac" className="">
                             MAC (optional)
                         </Label>
                         <Input
@@ -116,7 +119,7 @@ export default function AddHostDialog({ onHostAdded }) {
                         />
                     </div>
                     <div className="flex justify-end pt-4">
-                        <Button type="submit">Save Host</Button>
+                        <Button type="submit">Save Changes</Button>
                     </div>
                 </form>
             </DialogContent>

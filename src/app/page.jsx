@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import HostCard from "@/components/HostCard"
-import AddHostDialog from "@/components/CreateHostDialog"
+import AddHostDialog from "@/components/AddHostDialog"
 import { toast } from "sonner"
 
 export default function Home() {
@@ -58,6 +58,7 @@ export default function Home() {
             host={h}
             deleteHost={deleteHost}
             wake={wake}
+            fetchHosts={fetchHosts}
             check={check}
           />
         ))}

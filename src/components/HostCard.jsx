@@ -7,9 +7,10 @@ import { EllipsisVertical } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover"
 import { Separator } from "@/components/ui/separator"
+import { EditHostDialog } from "./EditHostDialog"
 
 
-export default function HostCard({ host, deleteHost, wake, check }) {
+export default function HostCard({ host, deleteHost, wake, check, fetchHosts }) {
     const [status, setStatus] = useState({ alive: false, time: 0 })
     const [pulse, setPulse] = useState(false)
 
@@ -63,13 +64,17 @@ export default function HostCard({ host, deleteHost, wake, check }) {
                                 <h4 className="font-semibold">Actions</h4>
                                 <Separator orientation="horizontal" />
                                 <div className="flex flex-row gap-2">
-                                    <Button
-                                        onClick={() => console.log("edit?")}
-                                        variant=""
-                                        size="sm">
-                                        <PencilIcon />
-                                        Edit
-                                    </Button>
+                                    <EditHostDialog host={host} onHostUpdated={fetchHosts}>
+                                        <Button
+                                            onClick={() => console.log("edit?")}
+                                            variant=""
+                                            size="sm">
+                                            <PencilIcon />
+                                            Edit
+                                        </Button>
+                                    </EditHostDialog>
+
+
                                     <Button
                                         onClick={() => deleteHost(host.id)}
                                         variant="destructive"

@@ -3,15 +3,19 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import HostCard from "@/components/HostCard"
-import CreateHostDialog from "@/components/CreateHostDialog"
+import AddHostDialog from "@/components/CreateHostDialog"
 
 export default function Home() {
   const [hosts, setHosts] = useState([])
 
-  useEffect(() => {
+  const fetchHosts = () => {
     fetch("/api/hosts")
       .then(r => r.json())
       .then(d => setHosts(d.hosts || []))
+  }
+
+  useEffect(() => {
+    fetchHosts()
   }, [])
 
   const addHost = async () => {
@@ -57,9 +61,8 @@ export default function Home() {
           <h1 className="text-2xl font-bold">Wake-On-LAN Dashboard</h1>
           <h6 className="text-xs">by stoaz & ChatGPT</h6>
         </div>
-        <Button onClick={addHost}>Add host</Button>
+        <AddHostDialog onHostAdded={fetchHosts} />
       </div>
-      <CreateHostDialog />
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {hosts.map((h) => (

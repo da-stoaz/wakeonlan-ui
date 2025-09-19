@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { toast } from "sonner";
 
 
 export default function AddHostDialog({ onHostAdded }) {
@@ -26,7 +27,7 @@ export default function AddHostDialog({ onHostAdded }) {
         e.preventDefault();
 
         if (!name.trim()) {
-            alert("Host name is required.");
+            toast("Host name is required.", {variant: "destructive"});
             return;
         }
 
@@ -50,7 +51,7 @@ export default function AddHostDialog({ onHostAdded }) {
             }
         } catch (error) {
             console.error("Failed to add host:", error);
-            alert("Failed to add host. Please try again.");
+            toast.error("Failed to add host. Please try again.");
         }
     };
 
@@ -81,11 +82,12 @@ export default function AddHostDialog({ onHostAdded }) {
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="ip" className="text-right">
-                            IP (optional)
+                            IP
                         </Label>
                         <Input
                             id="ip"
                             value={ip}
+                            required
                             onChange={(e) => setIp(e.target.value)}
                             className="col-span-3"
                         />

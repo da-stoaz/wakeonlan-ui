@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import HostCard from "@/components/HostCard"
 import AddHostDialog from "@/components/CreateHostDialog"
+import { toast } from "sonner"
 
 export default function Home() {
   const [hosts, setHosts] = useState([])
@@ -18,20 +19,6 @@ export default function Home() {
     fetchHosts()
   }, [])
 
-  const addHost = async () => {
-    const name = prompt("name")
-    const ip = prompt("ip (optional)")
-    const mask = prompt("subnet mask (written out)")
-    const mac = prompt("mac (optional)")
-    if (!name) return
-    await fetch("/api/hosts", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name, ip, mask, mac }),
-    })
-    const j = await fetch("/api/hosts").then(r => r.json())
-    setHosts(j.hosts)
-  }
 
   const deleteHost = async (hostId) => {
     await fetch(`/api/hosts?id=${hostId}`, { method: "DELETE" })
@@ -46,12 +33,12 @@ export default function Home() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ mac: h.mac, ip: h.ip, mask: h.mask }),
     })
-    alert("sent")
+    toast("Magic packet sent.")
   }
 
   const check = async (h) => {
     const j = await fetch("/api/status?ip=" + encodeURIComponent(h.ip)).then(r => r.json())
-    alert(j.alive ? "online" : "offline")
+    toast(j.alive ? "online" : "offline")
   }
 
   return (
@@ -59,7 +46,7 @@ export default function Home() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Wake-On-LAN Dashboard</h1>
-          <h6 className="text-xs">by stoaz & ChatGPT</h6>
+          <h6 className="text-xs">by stoaz & Gemini</h6>
         </div>
         <AddHostDialog onHostAdded={fetchHosts} />
       </div>

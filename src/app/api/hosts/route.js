@@ -61,7 +61,7 @@ export async function PATCH(req) {
     }
 
     if (updates.length === 0) {
-        return Response.json({ error: "No fields to update" }, { status: 400 });
+        return Response.json({ error: "No fields to update" }, { status: 304 });
     }
 
     const query = `UPDATE hosts SET ${updates.join(", ")} WHERE id = ?`;

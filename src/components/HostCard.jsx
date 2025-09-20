@@ -13,6 +13,7 @@ import { EditHostDialog } from "./EditHostDialog"
 export default function HostCard({ host, deleteHost, wake, check, fetchHosts }) {
     const [status, setStatus] = useState({ alive: false, time: 0 })
     const [pulse, setPulse] = useState(false)
+    const [uptime, setUptime] = useState(null);
 
     const pingHost = async () => {
         if (!host.ip) return
@@ -30,10 +31,27 @@ export default function HostCard({ host, deleteHost, wake, check, fetchHosts }) 
         }
     }
 
-    // Ping every 10s
+    const getUptime = async (hostId) => {
+        const response = await fetch(`/api/pings?id=${hostId}`);
+
+        if (response.ok) {
+            const data = await response.json();
+            const series = data.series;
+
+            // `series` will be an array of objects like:
+            // [{ time: 1730995200000, upPct: 1 }, { time: 1730995500000, upPct: 0.95 }, ...]
+
+            // Use this data to plot a chart
+            console.log(series);
+        } else {
+            console.error("Failed to fetch ping data.");
+        }
+    }
+
     useEffect(() => {
+        //getUptime()
         pingHost()
-        const interval = setInterval(pingHost, 10000)
+        const interval = setInterval(pingHost, 5000)
         return () => clearInterval(interval)
     }, [host.ip])
 
@@ -95,6 +113,7 @@ export default function HostCard({ host, deleteHost, wake, check, fetchHosts }) 
                 <div>IP: {host.ip}</div>
                 <div>Subnet Mask: {host.mask}</div>
                 <div>MAC: {host.mac ?? "N/A"}</div>
+                {/* <div>Uptime: {uptime}</div> */}
                 <div className="flex gap-2 pt-2">
                     {!host.mac ? (
                         <Tooltip>
@@ -135,7 +154,7 @@ export default function HostCard({ host, deleteHost, wake, check, fetchHosts }) 
                             }
                         }}
                     >
-                        Check
+                        Ping
                     </Button>
 
                 </div>

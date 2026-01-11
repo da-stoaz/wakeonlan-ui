@@ -7,6 +7,24 @@ import { Toaster } from "@/components/ui/sonner"
 export const metadata = {
   title: "Wake-On-LAN UI",
   description: "Next.js dashboard designed to wake computers",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+    other: [
+      {
+        rel: "icon",
+        sizes: "192x192",
+        url: "/android-chrome-192x192.png",
+      },
+      {
+        rel: "icon",
+        sizes: "512x512",
+        url: "/android-chrome-512x512.png",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 
